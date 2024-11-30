@@ -5,7 +5,7 @@ let rooms = {};
 export function createRoom(playerName) {
   const roomCode = nanoid(6);
   const playerId = nanoid(12);
-  const player = { id: playerId, name: playerName || "Guest" };
+  const player = { id: playerId, name: playerName, ready: false};
 
   rooms[roomCode] = { players: [player] };
 
@@ -15,7 +15,7 @@ export function createRoom(playerName) {
 export function joinRoom(roomCode, playerName) {
   if (rooms[roomCode]) {
     const playerId = nanoid(12);
-    const player = { id: playerId, name: playerName || "Guest" };
+    const player = { id: playerId, name: playerName, ready: false };
     rooms[roomCode].players.push(player);
 
     return playerId;

@@ -95,6 +95,29 @@ wss.on("connection", (ws) => {
         }
       }
     }
+
+    if (data.type === "ready") {
+      const { roomCode, playerId } = data;
+      const room = getRoom(roomCode);
+      if (room) {
+        const player = room.players.find((p) => p.id === playerId);
+        if (player) {
+          player.ready = !player.ready;
+          wss.clients.forEach((client) => {
+            if (client.readyState === ws.OPEN && client.roomCode === roomCode) {
+              client.send(
+                JSON.stringify({
+                  type: "playerList",
+                  roomCode,
+                  players: getPlayers(roomCode),
+                })
+              );
+            }
+          });
+        }
+      }
+    }
+
   });
 
   ws.on("close", () => {
